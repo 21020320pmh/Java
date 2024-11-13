@@ -17,7 +17,7 @@ public class Consumer extends Thread {
                 Thread.sleep(3000);
                 System.out.println(this.name + " got: " + message.getInfo());
             } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
+                System.out.println("Consumer was interrupted");
             }
         }
     }
