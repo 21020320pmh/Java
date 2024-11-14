@@ -1,4 +1,4 @@
-package Study;
+package Advance.Bai3;
 
 public class PrCsApp {
     public static void main(String[] args) {

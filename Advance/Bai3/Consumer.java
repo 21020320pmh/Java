@@ -1,4 +1,4 @@
-package Study;
+package Advance.Bai3;
 
 public class Consumer extends Thread {
     private final MyQueue<Message> queue;

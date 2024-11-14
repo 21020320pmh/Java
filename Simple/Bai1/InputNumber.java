@@ -1,6 +1,6 @@
-package Study;
+package Simple.Bai1;
 import java.util.Scanner;
-public class Test1 {
+public class InputNumber {
 
 	public static void main(String[] args) {
 		int ans = 10;

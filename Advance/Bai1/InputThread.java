@@ -1,4 +1,6 @@
-package Study;
+package Advance.Bai1;
+
+import Study.RandomNumberApp;
 
 import java.util.Scanner;
 

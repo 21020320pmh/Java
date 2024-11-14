@@ -1,4 +1,4 @@
-package Study;
+package Advance.Bai1;
 
 public class RandomNumberApp {
     private static boolean running = true;

@@ -1,4 +1,4 @@
-package Study;
+package Advance.Bai2;
 
 import java.util.Random;
 

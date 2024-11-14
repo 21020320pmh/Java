@@ -1,12 +1,12 @@
-package Study;
+package Simple.Bai3;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.IOException;
 import java.util.List;
 
-public class TestSort {
+public class SortArray {
 	public static void main(String[] args) {
-		String filePath = "src/Study/input.txt";
+		String filePath = "src/Simple/Bai3/input.txt";
 		int[] arr = null;
 
         try {

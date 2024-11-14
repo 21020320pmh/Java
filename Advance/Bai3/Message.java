@@ -1,4 +1,4 @@
-package Study;
+package Advance.Bai3;
 
 public class Message {
     private final String content;
