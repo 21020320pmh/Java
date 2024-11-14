@@ -3,11 +3,11 @@ package Study;
 import java.util.Random;
 
 public class Producer extends Thread {
-    private final MyQueue queue;
+    private final MyQueue<Message> queue;
     private final String name;
     boolean running = true;
     private int id = 1;
-    public Producer(MyQueue queue, String name) {
+    public Producer(MyQueue<Message> queue, String name) {
         this.queue = queue;
         this.name = name;
     }

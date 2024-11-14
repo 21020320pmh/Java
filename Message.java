@@ -1,8 +1,8 @@
 package Study;
 
 public class Message {
-    private String content;
-    private int id;
+    private final String content;
+    private final int id;
 
     public Message(String content, int id) {
         this.content = content;

@@ -1,10 +1,10 @@
 package Study;
 
 public class Consumer extends Thread {
-    private final MyQueue queue;
+    private final MyQueue<Message> queue;
     private final String name;
     boolean running = true;
-    public Consumer(MyQueue queue, String name) {
+    public Consumer(MyQueue<Message> queue, String name) {
         this.queue = queue;
         this.name = name;
     }

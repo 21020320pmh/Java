@@ -9,8 +9,8 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-public class MyQueue implements BlockingQueue<Message> {
-    private final Message[] queue;
+public class MyQueue<T> implements BlockingQueue<T> {
+    private final T[] queue;
     private int head;
     private int tail;
     private int size;
@@ -18,7 +18,7 @@ public class MyQueue implements BlockingQueue<Message> {
 
     public MyQueue(int capacity) {
         this.capacity = capacity;
-        this.queue = new Message[capacity];
+        this.queue = (T[]) new Object[capacity];
         this.head = 0;
         this.tail = 0;
         this.size = 0;
@@ -45,7 +45,7 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized int drainTo(@NotNull Collection<? super Message> c) {
+    public synchronized int drainTo(@NotNull Collection<? super T> c) {
         int count = 0;
         while (size > 0) {
             c.add(queue[head]);
@@ -57,7 +57,7 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized int drainTo(@NotNull Collection<? super Message> c, int maxElements) {
+    public synchronized int drainTo(@NotNull Collection<? super T> c, int maxElements) {
         int count = 0;
         while (size > 0 && count < maxElements) {
             c.add(queue[head]);
@@ -69,7 +69,7 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized @NotNull Iterator<Message> iterator() {
+    public synchronized @NotNull Iterator<T> iterator() {
         return new Iterator<>() {
             private int currentIndex = head;
             private int elementsLeft = size;
@@ -80,14 +80,14 @@ public class MyQueue implements BlockingQueue<Message> {
             }
 
             @Override
-            public Message next() {
+            public T next() {
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                Message message = queue[currentIndex];
+                T value = queue[currentIndex];
                 currentIndex = (currentIndex + 1) % capacity;
                 elementsLeft--;
-                return message;
+                return value;
             }
         };
     }
@@ -116,11 +116,11 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized boolean add(@NotNull Message message) {
+    public synchronized boolean add(@NotNull T value) {
         if (size >= capacity) {
             throw new IllegalStateException("Queue full");
         }
-        queue[tail] = message;
+        queue[tail] = value;
         tail = (tail + 1) % capacity;
         size++;
         notifyAll();
@@ -155,12 +155,12 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized boolean addAll(@NotNull Collection<? extends Message> c) {
+    public synchronized boolean addAll(@NotNull Collection<? extends T> c) {
         if (size + c.size() > capacity) {
             throw new IllegalStateException("Queue full");
         }
-        for (Message message : c) {
-            add(message);
+        for (T value : c) {
+            add(value);
         }
         return true;
     }
@@ -199,11 +199,11 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized boolean offer(@NotNull Message message) {
+    public synchronized boolean offer(@NotNull T value) {
         if (size >= capacity) {
             return false;
         }
-        queue[tail] = message;
+        queue[tail] = value;
         tail = (tail + 1) % capacity;
         size++;
         notifyAll();
@@ -211,18 +211,18 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized void put(@NotNull Message message) throws InterruptedException {
+    public synchronized void put(@NotNull T value) throws InterruptedException {
         while (size >= capacity) {
             wait();
         }
-        queue[tail] = message;
+        queue[tail] = value;
         tail = (tail + 1) % capacity;
         size++;
         notifyAll();
     }
 
     @Override
-    public synchronized boolean offer(Message message, long timeout, @NotNull TimeUnit unit) throws InterruptedException {
+    public synchronized boolean offer(T value, long timeout, @NotNull TimeUnit unit) throws InterruptedException {
         long nanos = unit.toNanos(timeout);
         long deadline = System.nanoTime() + nanos;
         while (size >= capacity) {
@@ -232,7 +232,7 @@ public class MyQueue implements BlockingQueue<Message> {
             wait(nanos / 1000000L, (int) (nanos % 1000000L));
             nanos = deadline - System.nanoTime();
         }
-        queue[tail] = message;
+        queue[tail] = value;
         tail = (tail + 1) % capacity;
         size++;
         notifyAll();
@@ -240,19 +240,19 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized @NotNull Message take() throws InterruptedException {
+    public synchronized @NotNull T take() throws InterruptedException {
         while (size == 0) {
             wait();
         }
-        Message message = queue[head];
+        T value = queue[head];
         head = (head + 1) % capacity;
         size--;
         notifyAll();
-        return message;
+        return value;
     }
 
     @Override
-    public synchronized @Nullable Message poll(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
+    public synchronized @Nullable T poll(long timeout, @NotNull TimeUnit unit) throws InterruptedException {
         long nanos = unit.toNanos(timeout);
         long deadline = System.nanoTime() + nanos;
         while (size == 0) {
@@ -262,11 +262,11 @@ public class MyQueue implements BlockingQueue<Message> {
             wait(nanos / 1000000L, (int) (nanos % 1000000L));
             nanos = deadline - System.nanoTime();
         }
-        Message message = queue[head];
+        T value = queue[head];
         head = (head + 1) % capacity;
         size--;
         notifyAll();
-        return message;
+        return value;
     }
 
     @Override
@@ -275,31 +275,31 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized Message remove() {
+    public synchronized T remove() {
         if (size == 0) {
             throw new IllegalStateException("Queue empty");
         }
-        Message message = queue[head];
+        T value = queue[head];
         head = (head + 1) % capacity;
         size--;
         notifyAll();
-        return message;
+        return value;
     }
 
     @Override
-    public synchronized Message poll() {
+    public synchronized T poll() {
         if (size == 0) {
             return null;
         }
-        Message message = queue[head];
+        T value = queue[head];
         head = (head + 1) % capacity;
         size--;
         notifyAll();
-        return message;
+        return value;
     }
 
     @Override
-    public synchronized Message element() {
+    public synchronized T element() {
         if (size == 0) {
             throw new IllegalStateException("Queue empty");
         }
@@ -307,7 +307,7 @@ public class MyQueue implements BlockingQueue<Message> {
     }
 
     @Override
-    public synchronized Message peek() {
+    public synchronized T peek() {
         if (size == 0) {
             return null;
         }
